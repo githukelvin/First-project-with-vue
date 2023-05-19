@@ -1,10 +1,15 @@
 <script setup>
 import Todoitem from '../components/Todoitem.vue'
-import { ref } from 'vue';
+import { ref ,watch,computed} from 'vue';
 import { Icon } from '@iconify/vue';
 import { uid } from "uid";
 import TodoCreator from '../components/TodoCreator.vue';
 const todoList = ref([])
+watch(todoList,()=>{
+  saveLocals(); 
+},{
+  deep:true
+})
 
 const createTodo =(todo)=>{
   todoList.value.push({
@@ -13,19 +18,22 @@ const createTodo =(todo)=>{
     isCompleted:false,
     isEditing:null
   });
-  saveLocals();
+  
 };
+const todoCompleted =computed(()=>{
+  return todoList.value.every((todo)=>todo.isCompleted);
+})
 function toggleTodoComplete(index){
   todoList.value[index].isCompleted = !todoList.value[index].isCompleted;
-  saveLocals();
+  
 }
 function editTodo(index){
   todoList.value[index].isEditing = !todoList.value[index].isEditing;
-  saveLocals();
+  
 }
 function editDone(index){
   todoList.value[index].isEditing = !todoList.value[index].isEditing;
-  saveLocals();
+  
 }
 function updateValue(vale,index){
   todoList.value[index].todo = vale;
@@ -67,6 +75,10 @@ getLocals();
     <p v-else class="todos-msg">
       <Icon icon="noto-v1:sad-but-relieved-face"  width="22" height="22" />
       <span>There are no todos! Add one</span>
+    </p>
+    <p v-if="todoCompleted &&  todoList.length > 0" class="todos-msg">
+      <Icon icon="noto-v1:party-popper" />
+      <span>You  have completed all your todos</span>
     </p>
   </main>
 </template>
