@@ -10,18 +10,40 @@ const createTodo =(todo)=>{
   todoList.value.push({
     id: uid(),
     todo,
-    isCompleted:null,
+    isCompleted:false,
     isEditing:null
   });
 };
+function toggleTodoComplete(index){
+  todoList.value[index].isCompleted = !todoList.value[index].isCompleted;
+}
+function editTodo(index){
+  todoList.value[index].isEditing = !todoList.value[index].isEditing;
+}
+function editDone(index){
+  todoList.value[index].isEditing = !todoList.value[index].isEditing;
+}
+function updateValue(vale,index){
+  todoList.value[index].todo = vale;
+}
 </script>
 
 <template>
   <main>
     <h1>Create Todo</h1>
     <TodoCreator @create-todo="createTodo"/>
-    <ul class="todo-list" v-if=" todoList.length > 0 ">
-      <Todoitem v-for="todo in  todoList" :key="todo.todo" :todo="todo"/>
+
+    <ul class="todo-list" v-if="todoList.length> 0" >
+      <Todoitem 
+      v-for="(todo, index) in  todoList" 
+      :index="index" 
+      :key="todo.todo" 
+      :todo="todo"
+      @toggle-complete="toggleTodoComplete"
+      @edit-todo="editTodo"
+      @edit-done ="editDone"
+      @update="updateValue"
+      />
     </ul>
     <p v-else class="todos-msg">
       <Icon icon="noto-v1:sad-but-relieved-face"  width="22" height="22" />

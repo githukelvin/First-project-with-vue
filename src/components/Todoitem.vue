@@ -6,20 +6,59 @@ const props = defineProps({
         required:true,
        
     },
+    index:{
+        type:Number,
+        required:true
+    }
 });
+defineEmits(["toggle-complete","edit-todo","edit-done","update"])
 </script>
 
 <template>
   <li>
-    <input type="checkbox" :checked="todo.isCompleted" >
+    <input 
+    type="checkbox" 
+    :checked="todo.isCompleted" 
+    @input="$emit('toggle-complete',index)" >
     <div class="todo"> 
-        <input v-if="todo.isEditing" type="text" :value="todo.todo" >
-        <span v-else>{{todo.todo}}</span>
+        <input
+           v-if="todo.isEditing"
+           @input="$emit('update',$event.target.value,index)"
+           :value="todo.todo"
+           type="text"
+         >
+      <span
+          v-else
+          :class="{'completed-todo':todo.isCompleted}">{{todo.todo}}</span
+        >
+       
     </div>
     <div class="todo-actions">
-        <Icon v-if="todo.isEditing" class="icon" icon="ph:check-circle" color="#41b080" width="22" height="22" />
-        <Icon v-else class="icon" icon="ph:pencil-fill" color="#adb5bd" width="22" height="22" />
-        <Icon class="icon" icon="ph:trash" color="#dc2f02" width="22" height="22" />
+       <Icon
+          v-if="todo.isEditing"
+          class="icon"
+          color="#41b080"
+          height="22"
+          icon="ph:check-circle"
+          width="22"
+          @click="$emit('edit-done',index)"
+        />
+        <Icon
+          v-else
+          @click="$emit('edit-todo',index)"
+          class="icon"
+          color="#adb5bd"
+          height="22"
+          icon="ph:pencil-fill"
+          width="22"
+        />
+        <Icon
+          class="icon"
+          color="#dc2f02"
+          height="22"
+          icon="ph:trash"
+          width="22"
+        />
     </div>
   </li>
 </template>
@@ -56,7 +95,10 @@ li {
 
     .todo {
         flex: 1;
-
+        .completed-todo{
+            font-style: italic;
+            text-decoration: line-through;
+        }
         input[type="text"] {
             width: 100%;
             padding: 2px 6px;
