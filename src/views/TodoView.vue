@@ -13,19 +13,37 @@ const createTodo =(todo)=>{
     isCompleted:false,
     isEditing:null
   });
+  saveLocals();
 };
 function toggleTodoComplete(index){
   todoList.value[index].isCompleted = !todoList.value[index].isCompleted;
+  saveLocals();
 }
 function editTodo(index){
   todoList.value[index].isEditing = !todoList.value[index].isEditing;
+  saveLocals();
 }
 function editDone(index){
   todoList.value[index].isEditing = !todoList.value[index].isEditing;
+  saveLocals();
 }
 function updateValue(vale,index){
   todoList.value[index].todo = vale;
 }
+function deletTodo (index){
+  todoList.value.splice(index,1);
+}
+
+function saveLocals(){
+  localStorage.setItem("todoList",JSON.stringify(todoList.value))
+};
+
+function getLocals(){
+  if(localStorage.getItem("todoList")){
+    todoList.value = JSON.parse(localStorage.getItem("todoList"))
+  }
+}
+getLocals();
 </script>
 
 <template>
@@ -43,6 +61,7 @@ function updateValue(vale,index){
       @edit-todo="editTodo"
       @edit-done ="editDone"
       @update="updateValue"
+      @delete-todo="deletTodo"
       />
     </ul>
     <p v-else class="todos-msg">

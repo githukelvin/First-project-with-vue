@@ -11,7 +11,7 @@ const props = defineProps({
         required:true
     }
 });
-defineEmits(["toggle-complete","edit-todo","edit-done","update"])
+defineEmits(["toggle-complete","edit-todo","edit-done","update","delete-todo"])
 </script>
 
 <template>
@@ -23,7 +23,7 @@ defineEmits(["toggle-complete","edit-todo","edit-done","update"])
     <div class="todo"> 
         <input
            v-if="todo.isEditing"
-           @input="$emit('update',$event.target.value,index)"
+           @input ="$emit('update',$event.target.value,index)"
            :value="todo.todo"
            type="text"
          >
@@ -53,6 +53,7 @@ defineEmits(["toggle-complete","edit-todo","edit-done","update"])
           width="22"
         />
         <Icon
+            @click="$emit('delete-todo',index)"
           class="icon"
           color="#dc2f02"
           height="22"
